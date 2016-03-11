@@ -1,0 +1,407 @@
+---
+title: "data_clean"
+author: "Hugo Davis"
+date: "March 8, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+
+### Data Cleaning Assignment - Hugo Davis
+
+
+## Exercise 1
+```{r}
+setwd("C:/Users/Hugo/Documents/BTS - MDSD/Big Data/DataCleaning/DataCleaningAssignment")
+
+df_user <- read.csv(file="user_info.csv", header=FALSE, sep=",", na.strings = "NOT-AVAILABLE" )
+colnames(df_user) = c("tweet_id","user_id","location","tourist")
+
+df_tweets <- read.csv(file="tweet_info.csv", header=FALSE, sep=",", na.strings = "NOT-AVAILABLE")
+colnames(df_tweets) = c("tweet_id","timestamp","latitude","longitude")
+
+## Ex1
+
+head(df_user)
+head(df_tweets)
+```
+head(df_user)
+      tweet_id user_id                  location tourist
+1 6.039281e+17     521        Amsterdam  Seattle       1
+2 5.727670e+17    1866                      <NA>       1
+3 5.727684e+17    1866                      <NA>       1
+4 5.728172e+17    1866                      <NA>       1
+5 6.125749e+17    1966 San Francisco  California       1
+6 6.125766e+17    1966 San Francisco  California       1
+> head(df_tweets)
+      tweet_id           timestamp latitude longitude
+1 6.039281e+17 2015-05-28T16:17:40 41.40235  2.188129
+2 5.727670e+17 2015-03-03T15:34:31 41.35630  2.131096
+3 5.727684e+17 2015-03-03T15:40:09 41.35630  2.131441
+4 5.728172e+17 2015-03-03T18:53:59 41.35621  2.130454
+5 6.125749e+17 2015-06-21T12:56:56 41.38121  2.183924
+6 6.125766e+17 2015-06-21T13:03:29 41.37801  2.184717
+
+
+## Exercise 2
+```{r}
+## Ex2
+
+df_tweets$tweet_id <- factor(df_tweets$tweet_id)
+df_user$tweet_id <- factor(df_user$tweet_id)
+head(df_user)
+head(df_tweets)
+```
+            tweet_id user_id                  location tourist
+1 603928128508010496     521        Amsterdam  Seattle       1
+2 572767011664748544    1866                      <NA>       1
+3 572768427426910208    1866                      <NA>       1
+4 572817210160357376    1866                      <NA>       1
+5 612574920053248000    1966 San Francisco  California       1
+6 612576567148023808    1966 San Francisco  California       1
+> head(df_tweets)
+            tweet_id           timestamp latitude longitude
+1 603928128508010496 2015-05-28T16:17:40 41.40235  2.188129
+2 572767011664748544 2015-03-03T15:34:31 41.35630  2.131096
+3 572768427426910208 2015-03-03T15:40:09 41.35630  2.131441
+4 572817210160357376 2015-03-03T18:53:59 41.35621  2.130454
+5 612574920053248000 2015-06-21T12:56:56 41.38121  2.183924
+6 612576567148023808 2015-06-21T13:03:29 41.37801  2.184717
+
+
+## Exercise 3
+```{r}
+## Ex3
+
+dim(df_user)
+dim(df_tweets)
+```
+> dim(df_user)
+[1] 500541      4
+> dim(df_tweets)
+[1] 500541      4
+
+
+## Exercise 4
+```{r}
+length(unique(df_user$location))
+```
+> length(unique(df_user$location))
+[1] 18463
+
+## Exercise 5
+```{r}
+length(unique(df_user$user_id))
+```
+> length(unique(df_user$user_id))
+[1] 45463
+
+## Exercise 6
+```{r}
+length(unique(df_user$tweet_id))
+```
+> length(unique(df_user$tweet_id))
+[1] 499999
+
+## Exercise 7
+### 1)
+```{r}
+df_duplicate = duplicated(df_user$tweet_id)
+length(df_duplicate[df_duplicate==TRUE])
+```
+> df_duplicate = duplicated(df_user$tweet_id)
+> length(df_duplicate[df_duplicate==TRUE])
+[1] 542
+```{r}
+df_duplicate2 = duplicated(df_tweets$tweet_id)
+length(df_duplicate2[df_duplicate2==TRUE])
+```
+> df_duplicate2 = duplicated(df_tweets$tweet_id)
+> length(df_duplicate2[df_duplicate2==TRUE])
+[1] 542
+
+### 2)
+### and
+### 3)
+```{r}
+# df_duplicate[duplicated(df_duplicate, incomparables = FALSE)]
+# df_duplicate[duplicated(df_duplicate) ]
+duplicated(df_user)
+df_user[duplicated(df_user$tweet_id), ]
+df_duplicate_user <- df_user[duplicated(df_user$tweet_id), ]
+write.csv(df_duplicate_user, file="df_duplicate_user.csv")
+```
+> df_duplicate_user <- df_user[duplicated(df_user$tweet_id), ]
+> write.csv(df_duplicate_user, file="df_duplicate_user.csv")
+## See file, "df_duplicate_user.csv" in my working directory
+
+```{r}
+df_duplicate_tweets <- df_tweets[duplicated(df_tweets$tweet_id), ]
+write.csv(df_duplicate_tweets, file="df_duplicate_tweets.csv")
+```
+> df_duplicate_tweets <- df_tweets[duplicated(df_tweets$tweet_id), ]
+> write.csv(df_duplicate_tweets, file="df_duplicate_tweets.csv")
+## See file, "df_duplicate_tweets.csv" in my working directory
+
+### 4)
+```{r}
+df_user_withoutduplicates <- unique(df_user)
+df_tweets_withoutduplicates <- unique(df_tweets)
+```
+
+### 5)
+```{r}
+dim(df_user_withoutduplicates)
+dim(df_tweets_withoutduplicates)
+```
+> dim(df_user_withoutduplicates)
+[1] 500000      4
+> dim(df_tweets_withoutduplicates)
+[1] 500000      4
+
+## Exercise 8
+```{r}
+#merge(df_user, df_tweets, by = intersect(tweet_id(df_user_withoutduplicates), tweet_id(df_tweets_withoutduplicates)), 
+#     by.x = by, by.y = by, all = FALSE, all.x = all, all.y = all,
+#     sort = TRUE, suffixes = c(".x",".y"),
+#     incomparables = NULL, ...)
+
+twitter_df <- merge(x = df_user_withoutduplicates, y = df_tweets_withoutduplicates, by = "tweet_id", all = TRUE)
+head(twitter_df)
+twitter_df$tweet_id <- factor(twitter_df$tweet_id)
+head(twitter_df)
+```
+> twitter_df <- merge(x = df_user_withoutduplicates, y = df_tweets_withoutduplicates, by = "tweet_id", all = TRUE)
+> head(twitter_df)
+           tweet_id   user_id          location tourist           timestamp latitude longitude
+1 5.50570775645e+17 255505106 Roma - Barcellona       0 2015-01-01T09:34:36 41.40246  2.161789
+2 5.50618030641e+17  54216497         Barcelona       0 2015-01-01T12:42:23 41.39815  2.150188
+3 5.50643890119e+17 130509156                 b       0 2015-01-01T14:25:08 41.44155  2.187235
+4  5.5077668123e+17  66454504              <NA>       1 2015-01-01T23:12:48 41.38702  2.169961
+5 5.50911193201e+17 160515632         Barcelona       0 2015-01-02T08:07:18 41.37660  2.152457
+6 5.51063934506e+17  63182397             Spain       0 2015-01-02T18:14:14 41.38628  2.168995
+
+> twitter_df$tweet_id <- factor(twitter_df$tweet_id)
+> head(twitter_df)
+           tweet_id   user_id          location tourist           timestamp latitude longitude
+1 5.50570775645e+17 255505106 Roma - Barcellona       0 2015-01-01T09:34:36 41.40246  2.161789
+2 5.50618030641e+17  54216497         Barcelona       0 2015-01-01T12:42:23 41.39815  2.150188
+3 5.50643890119e+17 130509156                 b       0 2015-01-01T14:25:08 41.44155  2.187235
+4  5.5077668123e+17  66454504              <NA>       1 2015-01-01T23:12:48 41.38702  2.169961
+5 5.50911193201e+17 160515632         Barcelona       0 2015-01-02T08:07:18 41.37660  2.152457
+6 5.51063934506e+17  63182397             Spain       0 2015-01-02T18:14:14 41.38628  2.168995
+
+## Exercise 9
+### 1)
+```{r}
+tour_df <- subset(twitter_df, tourist == "1")
+head(tour_df)
+```
+> tour_df <- subset(twitter_df, tourist == "1")
+> head(tour_df)
+             tweet_id   user_id                     location tourist           timestamp latitude longitude
+4    5.5077668123e+17  66454504                         <NA>       1 2015-01-01T23:12:48 41.38702  2.169961
+22  5.51998245611e+17 150363306            San Francisco  CA       1 2015-01-05T08:06:52 41.39784  2.157934
+34  5.53336777764e+17  62991004            Rio Grande do Sul       1 2015-01-09T00:45:42 41.37404  2.126548
+43  5.54411139741e+17 254135575 Donde habitamos las sirenas.       1 2015-01-11T23:54:50 41.38018  2.170082
+72  5.57164877497e+17 326357436                     Suitcase       1 2015-01-19T14:17:13 41.38539  2.164652
+120 5.63610454137e+17 286605975                       London       1 2015-02-06T09:09:38 41.38630  2.158616
+
+### 2)
+```{r}
+local_df <- subset(twitter_df, tourist == "0")
+head(local_df)
+```
+> local_df <- subset(twitter_df, tourist == "0")
+> head(local_df)
+           tweet_id   user_id          location tourist           timestamp latitude longitude
+1 5.50570775645e+17 255505106 Roma - Barcellona       0 2015-01-01T09:34:36 41.40246  2.161789
+2 5.50618030641e+17  54216497         Barcelona       0 2015-01-01T12:42:23 41.39815  2.150188
+3 5.50643890119e+17 130509156                 b       0 2015-01-01T14:25:08 41.44155  2.187235
+5 5.50911193201e+17 160515632         Barcelona       0 2015-01-02T08:07:18 41.37660  2.152457
+6 5.51063934506e+17  63182397             Spain       0 2015-01-02T18:14:14 41.38628  2.168995
+7 5.51066969316e+17  17790650  Barcelona  Spain       0 2015-01-02T18:26:18 41.40662  2.193208
+
+## Exercise 10
+```{r}
+write.csv(tour_df, file="tour_df.csv")
+
+write.csv(local_df, file="local_df.csv")
+```
+## See files, "tour_df.csv" & "local_df.csv" in my working directory
+
+## Exercise 11
+```{r}
+no_complete_twitter_df <- twitter_df[!complete.cases(twitter_df),]
+head(no_complete_twitter_df)
+
+dim(twitter_df[!complete.cases(twitter_df),])
+dim(no_complete_twitter_df)
+```
+> no_complete_twitter_df <- twitter_df[!complete.cases(twitter_df),]
+> head(no_complete_twitter_df)
+            tweet_id   user_id location tourist           timestamp latitude longitude
+4   5.5077668123e+17  66454504     <NA>       1 2015-01-01T23:12:48 41.38702  2.169961
+30  5.5261224266e+17  65980057     <NA>       0 2015-01-07T00:46:40 41.37956  2.157606
+45 5.54612617437e+17 125340592     <NA>       0 2015-01-12T13:15:26 41.38046  2.191409
+46 5.54625779121e+17 125340592     <NA>       0 2015-01-12T14:07:44 41.38046  2.191420
+49 5.54926457123e+17 130251688     <NA>       0 2015-01-13T10:02:32 41.38523  2.185576
+60 5.55932257543e+17 290662108     <NA>       0 2015-01-16T04:39:13 41.36921  2.123471
+> 
+> dim(twitter_df[!complete.cases(twitter_df),])
+[1] 61282     7
+> dim(no_complete_twitter_df)
+[1] 61282     7
+
+## We can see that our new dataset has **61,282** rows
+
+## Exercise 12
+### 1) and 2)
+```{r}
+twitter_df$date <- as.POSIXct(twitter_df$timestamp, format = "%Y-%m-%d")
+
+twitter_df$month <- format(as.POSIXlt(twitter_df$date), "%Y-%m")
+
+twitter_df$hour <- format(as.POSIXlt(twitter_df$timestamp, format = "%Y-%m-%dT%H:%M:%S"), "%H")
+
+head(twitter_df)
+```
+> twitter_df$date <- as.POSIXct(twitter_df$timestamp, format = "%Y-%m-%d")
+> 
+> twitter_df$month <- format(as.POSIXlt(twitter_df$date), "%Y-%m")
+> 
+> twitter_df$hour <- format(as.POSIXlt(twitter_df$timestamp, format = "%Y-%m-%dT%H:%M:%S"), "%H")
+> 
+> head(twitter_df)
+           tweet_id   user_id          location tourist           timestamp latitude longitude       date   month hour
+1 5.50570775645e+17 255505106 Roma - Barcellona       0 2015-01-01T09:34:36 41.40246  2.161789 2015-01-01 2015-01   09
+2 5.50618030641e+17  54216497         Barcelona       0 2015-01-01T12:42:23 41.39815  2.150188 2015-01-01 2015-01   12
+3 5.50643890119e+17 130509156                 b       0 2015-01-01T14:25:08 41.44155  2.187235 2015-01-01 2015-01   14
+4  5.5077668123e+17  66454504              <NA>       1 2015-01-01T23:12:48 41.38702  2.169961 2015-01-01 2015-01   23
+5 5.50911193201e+17 160515632         Barcelona       0 2015-01-02T08:07:18 41.37660  2.152457 2015-01-02 2015-01   08
+6 5.51063934506e+17  63182397             Spain       0 2015-01-02T18:14:14 41.38628  2.168995 2015-01-02 2015-01   18
+
+## Exercise 13
+```{r}
+#tweetspermonth_df <- aggregate(tweet_id ~ month , twitter_df, FUN=length)
+#names(tweetspermonth_df) <- c("month","tweet_count")
+#head(tweetspermonth_df)
+
+tweetspermonth_tourists_df <- aggregate(tweet_id ~ month, twitter_df[twitter_df$tourist=="1",], FUN=length)
+names(tweetspermonth_tourists_df) <- c("month","tourists_tweet_count")
+tweetspermonth_locals_df <- aggregate(tweet_id ~ month, twitter_df[twitter_df$tourist=="0",], FUN=length)
+names(tweetspermonth_locals_df) <- c("month","locals_tweet_count")
+
+tweets_x_month <- merge(tweetspermonth_tourists_df, tweetspermonth_locals_df, by = "month")
+head(tweets_x_month)
+```
+> tweetspermonth_tourists_df <- aggregate(tweet_id ~ month, twitter_df[twitter_df$tourist=="1",], FUN=length)
+> names(tweetspermonth_tourists_df) <- c("month","tourists_tweet_count")
+> tweetspermonth_locals_df <- aggregate(tweet_id ~ month, twitter_df[twitter_df$tourist=="0",], FUN=length)
+> names(tweetspermonth_locals_df) <- c("month","locals_tweet_count")
+> 
+> tweets_x_month <- merge(tweetspermonth_tourists_df, tweetspermonth_locals_df, by = "month")
+> head(tweets_x_month)
+    month tourists_tweet_count locals_tweet_count
+1 2015-01                11870              91410
+2 2015-02                12556              68284
+3 2015-03                18140              51435
+4 2015-04                10487              54276
+5 2015-05                 7044              18853
+6 2015-06                11310              28300
+
+## Exercise 14
+```{r}
+head(tweets_x_month)
+```
+> head(tweets_x_month)
+    month tourists_tweet_count locals_tweet_count
+1 2015-01                11870              91410
+2 2015-02                12556              68284
+3 2015-03                18140              51435
+4 2015-04                10487              54276
+5 2015-05                 7044              18853
+6 2015-06                11310              28300
+
+## Already had this result from exercise 13.
+
+## Exercise 15
+```{r}
+tweets_x_user <- aggregate(month ~ user_id, twitter_df, FUN=length)
+names(tweets_x_user) <- c("user_id","tweet_count")
+head(tweets_x_user)
+tail(tweets_x_user)
+```
+> tweets_x_user <- aggregate(month ~ user_id, twitter_df, FUN=length)
+> names(tweets_x_user) <- c("user_id","tweet_count")
+> head(tweets_x_user)
+  user_id tweet_count
+1     521           1
+2    1866           3
+3    1966           2
+4    3968           1
+5    5737           1
+6    5803           1
+> tail(tweets_x_user)
+        user_id tweet_count
+45458 361255287           2
+45459 361270011           1
+45460 361274692           1
+45461 361284071           7
+45462 361290071           1
+45463 361291842         146
+
+## Exercise 16
+```{r}
+twitter_df[twitter_df$user_id=="361284071",]
+
+tweets_x_user[tweets_x_user$user_id=="361284071",]
+```
+> twitter_df[twitter_df$user_id=="361284071",]
+                 tweet_id   user_id location tourist           timestamp latitude longitude       date   month hour
+319243 599535121700659200 361284071    Spain       0 2015-05-16T13:21:26 41.37918  2.152146 2015-05-16 2015-05   13
+322697 600320174550552576 361284071    Spain       0 2015-05-18T17:20:57 41.39878  2.160465 2015-05-18 2015-05   17
+394926 619125823547813888 361284071    Spain       0 2015-07-09T14:47:53 41.37990  2.192607 2015-07-09 2015-07   14
+396622 619577579293556736 361284071    Spain       0 2015-07-10T20:43:00 41.44049  2.198175 2015-07-10 2015-07   20
+399417 620318206721441792 361284071    Spain       0 2015-07-12T21:46:00 41.41015  2.214180 2015-07-12 2015-07   21
+476859 643503786967834624 361284071    Spain       0 2015-09-14T21:17:13 41.39687  2.191270 2015-09-14 2015-09   21
+478786 644146194420211712 361284071    Spain       0 2015-09-16T15:49:55 41.39774  2.191080 2015-09-16 2015-09   15
+> 
+> tweets_x_user[tweets_x_user$user_id=="361284071",]
+        user_id tweet_count
+45461 361284071           7
+
+## We can see above that user_id, 361284071, has 7 tweets in my "twitter_df" dataset.  This matches up with the tweet count for this user_id in my "tweets_x_user".
+
+##Exercise 17
+```{r}
+highest_number_tweets <- tweets_x_user[order(-tweets_x_user$tweet_count),]
+head(highest_number_tweets)
+head(highest_number_tweets, n=1)
+
+```
+> highest_number_tweets <- tweets_x_user[order(-tweets_x_user$tweet_count),]
+> head(highest_number_tweets)
+        user_id tweet_count
+12053  63182397       13567
+18436 112169930        6456
+26390 187804659        4640
+29553 216999164        3079
+37883 279982734        3051
+41589 311455057        2891
+> head(highest_number_tweets, n=1)
+       user_id tweet_count
+12053 63182397       13567
+
+
